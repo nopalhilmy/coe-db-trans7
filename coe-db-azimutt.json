@@ -1,0 +1,1685 @@
+{
+  "id": "8460f346-b4dc-44c4-a928-8acf25ddfe3b",
+  "name": "COE",
+  "sources": [
+    {
+      "id": "2ae0a02b-8898-4ce2-bf6d-867d11ca1bc7",
+      "name": "default",
+      "kind": {
+        "kind": "AmlEditor"
+      },
+      "content": [
+        "#",
+        "# USERS",
+        "#",
+        "clients",
+        "  client_id uuid pk",
+        "  client_name varchar",
+        "  client_email varchar unique",
+        "  client_phone varchar",
+        "  client_company varchar",
+        "  client_password hash(md5, sha1, sha256)",
+        "  client_type_register type_register(referral, form)",
+        "  client_activation_code hash(md5, sha1, sha256) nullable",
+        "  client_forgot_password_code hash(md5, sha1, sha256) nullable",
+        "  client_approval_status status(approved, rejected, waiting)",
+        "  client_last_login timestamp nullable",
+        "  active_at timestamp nullable",
+        "  created_at timestamp",
+        "  modified_at timestamp",
+        "  is_deleted boolean",
+        "",
+        "client_referral_relations",
+        "  id uuid pk",
+        "  client_id uuid fk clients.client_id",
+        "  referral_id uuid fk referrals.referral_id",
+        "  created_at timestamp",
+        "",
+        "referrals",
+        "  referral_id uuid pk",
+        "  referral_nik varchar unique",
+        "  referral_name varchar",
+        "  referral_dapartment varchar",
+        "  referral_division varchar",
+        "  created_at timestamp",
+        "  created_by uuid fk administrator.id",
+        "",
+        "#",
+        "# EVENT",
+        "#",
+        "events",
+        "  event_id uuid pk",
+        "  event_name varchar",
+        "  event_description text",
+        "  event_start_at timestamp",
+        "  event_end_at timestamp",
+        "  event_location text",
+        "  event_type type(small, medium, large)",
+        "  event_gender gender_interest(M, F, M&F)",
+        "  event_package_description text",
+        "  event_price number | in rupiah",
+        "  event_max_deal number",
+        "  is_deleted boolean",
+        "  created_at timestamp",
+        "  created_by uuid fk administrator.id",
+        "  modified_at timestamp nullable",
+        "  modified_by uuid nullable fk administrator.id",
+        "",
+        "event_file_packages",
+        "  package_id uuid pk",
+        "  package_name varchar",
+        "  package_file varchar",
+        "  event_id uuid fk events.event_id",
+        "  is_deleted boolean",
+        "  created_at timestamp",
+        "  created_by uuid fk administrator.id",
+        "  modified_at timestamp nullable",
+        "  modified_by uuid nullable fk administrator.id",
+        "",
+        "event_pics",
+        "  pics_id uuid pk",
+        "  pics_name varchar",
+        "  pics_description varchar",
+        "  pics_url varchar",
+        "  event_id uuid fk events.event_id",
+        "  is_deleted boolean",
+        "  created_at timestamp",
+        "  created_by uuid fk administrator.id",
+        "  modified_at timestamp nullable",
+        "  modified_by uuid nullable fk administrator.id",
+        "",
+        "event_age_relations",
+        "  id uuid pk",
+        "  event_id uuid fk events.event_id",
+        "  age_interest_id uuid fk event_age_interest.age_interest_id",
+        "  created_at timestamp",
+        "",
+        "event_age_interest",
+        "  age_interest_id uuid pk",
+        "  age_interest_target varchar",
+        "  is_deleted boolean",
+        "  created_at timestamp",
+        "  created_by uuid fk administrator.id",
+        "  modified_at timestamp nullable",
+        "  modified_by uuid nullable fk administrator.id",
+        "",
+        "event_category_relations",
+        "  id uuid pk",
+        "  event_id uuid fk events.event_id",
+        "  category_interest_id uuid fk event_category_interest.category_interest_id",
+        "  created_at timestamp",
+        "",
+        "event_category_interest",
+        "  category_interest_id uuid pk",
+        "  category_interest varchar",
+        "  is_deleted boolean",
+        "  created_at timestamp",
+        "  created_by uuid fk administrator.id",
+        "  modified_at timestamp nullable",
+        "  modified_by uuid nullable fk administrator.id",
+        "",
+        "#",
+        "# CART",
+        "#",
+        "cart",
+        "  cart_id uuid pk",
+        "  client_id uuid fk clients.client_id",
+        "  total_amount number | in rupiah",
+        "  created_at timestamp",
+        "",
+        "cart_details",
+        "  cart_detail_id uuid pk",
+        "  cart_id uuid fk cart.cart_id",
+        "  event_id uuid fk events.event_id",
+        "  event_unit_price number | in rupiah",
+        "  created_at timestamp",
+        "",
+        "#",
+        "# ORDER",
+        "#",
+        "order",
+        "  order_id uuid pk",
+        "  client_id uuid fk clients.client_id",
+        "  total_amount number | in rupiah",
+        "  order_date timestamp",
+        "  status enum(active, deal, dispute)",
+        "  adjustment_for uuid nullable",
+        "  created_at timestamp",
+        "  modified_at timestamp nullable",
+        "  modified_by uuid nullable fk administrator.id",
+        "",
+        "order_details",
+        "  order_detail_id uuid pk",
+        "  order_id uuid fk order.order_id",
+        "  event_id uuid fk events.event_id",
+        "  event_unit_price number | in rupiah",
+        "  created_at",
+        "",
+        "#",
+        "# USER ADMIN",
+        "#",
+        "administrator",
+        "  id uuid pk",
+        "  username varchar",
+        "  password varchar",
+        "  type admin_type(superadmin, admin dhq)",
+        "  is_deleted boolean",
+        "  created_at timestamp",
+        "  created_by uuid",
+        "  modified_at timestamp nullable",
+        "  modified_by uuid nullable",
+        "",
+        "#",
+        "# LOGS EVENT",
+        "#",
+        "log_event_activities",
+        "  id uuid pk",
+        "  event_id uuid fk events.event_id",
+        "  activity_event event(view, order, deal, dispute)",
+        "  note text nullable",
+        "  attribute json | user.id & user.role (admin, super, client)",
+        "  created_at timestamp",
+        "",
+        "#",
+        "# NOTIFICATION",
+        "#",
+        "notifications"
+      ],
+      "tables": [
+        {
+          "schema": "",
+          "table": "administrator",
+          "columns": [
+            {
+              "name": "id",
+              "type": "uuid"
+            },
+            {
+              "name": "username",
+              "type": "varchar"
+            },
+            {
+              "name": "password",
+              "type": "varchar"
+            },
+            {
+              "name": "type",
+              "type": "admin_type"
+            },
+            {
+              "name": "is_deleted",
+              "type": "boolean"
+            },
+            {
+              "name": "created_at",
+              "type": "timestamp"
+            },
+            {
+              "name": "created_by",
+              "type": "uuid"
+            },
+            {
+              "name": "modified_at",
+              "type": "timestamp",
+              "nullable": true
+            },
+            {
+              "name": "modified_by",
+              "type": "uuid",
+              "nullable": true
+            }
+          ],
+          "primaryKey": {
+            "columns": [
+              "id"
+            ]
+          }
+        },
+        {
+          "schema": "",
+          "table": "cart",
+          "columns": [
+            {
+              "name": "cart_id",
+              "type": "uuid"
+            },
+            {
+              "name": "client_id",
+              "type": "uuid"
+            },
+            {
+              "name": "total_amount",
+              "type": "number",
+              "comment": {
+                "text": "in rupiah"
+              }
+            },
+            {
+              "name": "created_at",
+              "type": "timestamp"
+            }
+          ],
+          "primaryKey": {
+            "columns": [
+              "cart_id"
+            ]
+          }
+        },
+        {
+          "schema": "",
+          "table": "cart_details",
+          "columns": [
+            {
+              "name": "cart_detail_id",
+              "type": "uuid"
+            },
+            {
+              "name": "cart_id",
+              "type": "uuid"
+            },
+            {
+              "name": "event_id",
+              "type": "uuid"
+            },
+            {
+              "name": "event_unit_price",
+              "type": "number",
+              "comment": {
+                "text": "in rupiah"
+              }
+            },
+            {
+              "name": "created_at",
+              "type": "timestamp"
+            }
+          ],
+          "primaryKey": {
+            "columns": [
+              "cart_detail_id"
+            ]
+          }
+        },
+        {
+          "schema": "",
+          "table": "client_referral_relations",
+          "columns": [
+            {
+              "name": "id",
+              "type": "uuid"
+            },
+            {
+              "name": "client_id",
+              "type": "uuid"
+            },
+            {
+              "name": "referral_id",
+              "type": "uuid"
+            },
+            {
+              "name": "created_at",
+              "type": "timestamp"
+            }
+          ],
+          "primaryKey": {
+            "columns": [
+              "id"
+            ]
+          }
+        },
+        {
+          "schema": "",
+          "table": "clients",
+          "columns": [
+            {
+              "name": "client_id",
+              "type": "uuid"
+            },
+            {
+              "name": "client_name",
+              "type": "varchar"
+            },
+            {
+              "name": "client_email",
+              "type": "varchar"
+            },
+            {
+              "name": "client_phone",
+              "type": "varchar"
+            },
+            {
+              "name": "client_company",
+              "type": "varchar"
+            },
+            {
+              "name": "client_password",
+              "type": "hash"
+            },
+            {
+              "name": "client_type_register",
+              "type": "type_register"
+            },
+            {
+              "name": "client_activation_code",
+              "type": "hash",
+              "nullable": true
+            },
+            {
+              "name": "client_forgot_password_code",
+              "type": "hash",
+              "nullable": true
+            },
+            {
+              "name": "client_approval_status",
+              "type": "status"
+            },
+            {
+              "name": "client_last_login",
+              "type": "timestamp",
+              "nullable": true
+            },
+            {
+              "name": "active_at",
+              "type": "timestamp",
+              "nullable": true
+            },
+            {
+              "name": "created_at",
+              "type": "timestamp"
+            },
+            {
+              "name": "modified_at",
+              "type": "timestamp"
+            },
+            {
+              "name": "is_deleted",
+              "type": "boolean"
+            }
+          ],
+          "primaryKey": {
+            "columns": [
+              "client_id"
+            ]
+          },
+          "uniques": [
+            {
+              "name": "clients_client_email_unique_az",
+              "columns": [
+                "client_email"
+              ]
+            }
+          ]
+        },
+        {
+          "schema": "",
+          "table": "event_age_interest",
+          "columns": [
+            {
+              "name": "age_interest_id",
+              "type": "uuid"
+            },
+            {
+              "name": "age_interest_target",
+              "type": "varchar"
+            },
+            {
+              "name": "is_deleted",
+              "type": "boolean"
+            },
+            {
+              "name": "created_at",
+              "type": "timestamp"
+            },
+            {
+              "name": "created_by",
+              "type": "uuid"
+            },
+            {
+              "name": "modified_at",
+              "type": "timestamp",
+              "nullable": true
+            },
+            {
+              "name": "modified_by",
+              "type": "uuid",
+              "nullable": true
+            }
+          ],
+          "primaryKey": {
+            "columns": [
+              "age_interest_id"
+            ]
+          }
+        },
+        {
+          "schema": "",
+          "table": "event_age_relations",
+          "columns": [
+            {
+              "name": "id",
+              "type": "uuid"
+            },
+            {
+              "name": "event_id",
+              "type": "uuid"
+            },
+            {
+              "name": "age_interest_id",
+              "type": "uuid"
+            },
+            {
+              "name": "created_at",
+              "type": "timestamp"
+            }
+          ],
+          "primaryKey": {
+            "columns": [
+              "id"
+            ]
+          }
+        },
+        {
+          "schema": "",
+          "table": "event_category_interest",
+          "columns": [
+            {
+              "name": "category_interest_id",
+              "type": "uuid"
+            },
+            {
+              "name": "category_interest",
+              "type": "varchar"
+            },
+            {
+              "name": "is_deleted",
+              "type": "boolean"
+            },
+            {
+              "name": "created_at",
+              "type": "timestamp"
+            },
+            {
+              "name": "created_by",
+              "type": "uuid"
+            },
+            {
+              "name": "modified_at",
+              "type": "timestamp",
+              "nullable": true
+            },
+            {
+              "name": "modified_by",
+              "type": "uuid",
+              "nullable": true
+            }
+          ],
+          "primaryKey": {
+            "columns": [
+              "category_interest_id"
+            ]
+          }
+        },
+        {
+          "schema": "",
+          "table": "event_category_relations",
+          "columns": [
+            {
+              "name": "id",
+              "type": "uuid"
+            },
+            {
+              "name": "event_id",
+              "type": "uuid"
+            },
+            {
+              "name": "category_interest_id",
+              "type": "uuid"
+            },
+            {
+              "name": "created_at",
+              "type": "timestamp"
+            }
+          ],
+          "primaryKey": {
+            "columns": [
+              "id"
+            ]
+          }
+        },
+        {
+          "schema": "",
+          "table": "event_file_packages",
+          "columns": [
+            {
+              "name": "package_id",
+              "type": "uuid"
+            },
+            {
+              "name": "package_name",
+              "type": "varchar"
+            },
+            {
+              "name": "package_file",
+              "type": "varchar"
+            },
+            {
+              "name": "event_id",
+              "type": "uuid"
+            },
+            {
+              "name": "is_deleted",
+              "type": "boolean"
+            },
+            {
+              "name": "created_at",
+              "type": "timestamp"
+            },
+            {
+              "name": "created_by",
+              "type": "uuid"
+            },
+            {
+              "name": "modified_at",
+              "type": "timestamp",
+              "nullable": true
+            },
+            {
+              "name": "modified_by",
+              "type": "uuid",
+              "nullable": true
+            }
+          ],
+          "primaryKey": {
+            "columns": [
+              "package_id"
+            ]
+          }
+        },
+        {
+          "schema": "",
+          "table": "event_pics",
+          "columns": [
+            {
+              "name": "pics_id",
+              "type": "uuid"
+            },
+            {
+              "name": "pics_name",
+              "type": "varchar"
+            },
+            {
+              "name": "pics_description",
+              "type": "varchar"
+            },
+            {
+              "name": "pics_url",
+              "type": "varchar"
+            },
+            {
+              "name": "event_id",
+              "type": "uuid"
+            },
+            {
+              "name": "is_deleted",
+              "type": "boolean"
+            },
+            {
+              "name": "created_at",
+              "type": "timestamp"
+            },
+            {
+              "name": "created_by",
+              "type": "uuid"
+            },
+            {
+              "name": "modified_at",
+              "type": "timestamp",
+              "nullable": true
+            },
+            {
+              "name": "modified_by",
+              "type": "uuid",
+              "nullable": true
+            }
+          ],
+          "primaryKey": {
+            "columns": [
+              "pics_id"
+            ]
+          }
+        },
+        {
+          "schema": "",
+          "table": "events",
+          "columns": [
+            {
+              "name": "event_id",
+              "type": "uuid"
+            },
+            {
+              "name": "event_name",
+              "type": "varchar"
+            },
+            {
+              "name": "event_description",
+              "type": "text"
+            },
+            {
+              "name": "event_start_at",
+              "type": "timestamp"
+            },
+            {
+              "name": "event_end_at",
+              "type": "timestamp"
+            },
+            {
+              "name": "event_location",
+              "type": "text"
+            },
+            {
+              "name": "event_type",
+              "type": "type"
+            },
+            {
+              "name": "event_gender",
+              "type": "gender_interest"
+            },
+            {
+              "name": "event_package_description",
+              "type": "text"
+            },
+            {
+              "name": "event_price",
+              "type": "number",
+              "comment": {
+                "text": "in rupiah"
+              }
+            },
+            {
+              "name": "event_max_deal",
+              "type": "number"
+            },
+            {
+              "name": "is_deleted",
+              "type": "boolean"
+            },
+            {
+              "name": "created_at",
+              "type": "timestamp"
+            },
+            {
+              "name": "created_by",
+              "type": "uuid"
+            },
+            {
+              "name": "modified_at",
+              "type": "timestamp",
+              "nullable": true
+            },
+            {
+              "name": "modified_by",
+              "type": "uuid",
+              "nullable": true
+            }
+          ],
+          "primaryKey": {
+            "columns": [
+              "event_id"
+            ]
+          }
+        },
+        {
+          "schema": "",
+          "table": "log_event_activities",
+          "columns": [
+            {
+              "name": "id",
+              "type": "uuid"
+            },
+            {
+              "name": "event_id",
+              "type": "uuid"
+            },
+            {
+              "name": "activity_event",
+              "type": "event"
+            },
+            {
+              "name": "note",
+              "type": "text",
+              "nullable": true
+            },
+            {
+              "name": "attribute",
+              "type": "json",
+              "comment": {
+                "text": "user.id & user.role (admin, super, client)"
+              }
+            },
+            {
+              "name": "created_at",
+              "type": "timestamp"
+            }
+          ],
+          "primaryKey": {
+            "columns": [
+              "id"
+            ]
+          }
+        },
+        {
+          "schema": "",
+          "table": "notifications",
+          "columns": []
+        },
+        {
+          "schema": "",
+          "table": "order",
+          "columns": [
+            {
+              "name": "order_id",
+              "type": "uuid"
+            },
+            {
+              "name": "client_id",
+              "type": "uuid"
+            },
+            {
+              "name": "total_amount",
+              "type": "number",
+              "comment": {
+                "text": "in rupiah"
+              }
+            },
+            {
+              "name": "order_date",
+              "type": "timestamp"
+            },
+            {
+              "name": "status",
+              "type": "enum"
+            },
+            {
+              "name": "adjustment_for",
+              "type": "uuid",
+              "nullable": true
+            },
+            {
+              "name": "created_at",
+              "type": "timestamp"
+            },
+            {
+              "name": "modified_at",
+              "type": "timestamp",
+              "nullable": true
+            },
+            {
+              "name": "modified_by",
+              "type": "uuid",
+              "nullable": true
+            }
+          ],
+          "primaryKey": {
+            "columns": [
+              "order_id"
+            ]
+          }
+        },
+        {
+          "schema": "",
+          "table": "order_details",
+          "columns": [
+            {
+              "name": "order_detail_id",
+              "type": "uuid"
+            },
+            {
+              "name": "order_id",
+              "type": "uuid"
+            },
+            {
+              "name": "event_id",
+              "type": "uuid"
+            },
+            {
+              "name": "event_unit_price",
+              "type": "number",
+              "comment": {
+                "text": "in rupiah"
+              }
+            },
+            {
+              "name": "created_at",
+              "type": "unknown"
+            }
+          ],
+          "primaryKey": {
+            "columns": [
+              "order_detail_id"
+            ]
+          }
+        },
+        {
+          "schema": "",
+          "table": "referrals",
+          "columns": [
+            {
+              "name": "referral_id",
+              "type": "uuid"
+            },
+            {
+              "name": "referral_nik",
+              "type": "varchar"
+            },
+            {
+              "name": "referral_name",
+              "type": "varchar"
+            },
+            {
+              "name": "referral_dapartment",
+              "type": "varchar"
+            },
+            {
+              "name": "referral_division",
+              "type": "varchar"
+            },
+            {
+              "name": "created_at",
+              "type": "timestamp"
+            },
+            {
+              "name": "created_by",
+              "type": "uuid"
+            }
+          ],
+          "primaryKey": {
+            "columns": [
+              "referral_id"
+            ]
+          },
+          "uniques": [
+            {
+              "name": "referrals_referral_nik_unique_az",
+              "columns": [
+                "referral_nik"
+              ]
+            }
+          ]
+        }
+      ],
+      "relations": [
+        {
+          "name": "client_referral_relations_referral_id_fk_az",
+          "src": {
+            "table": ".client_referral_relations",
+            "column": "referral_id"
+          },
+          "ref": {
+            "table": ".referrals",
+            "column": "referral_id"
+          }
+        },
+        {
+          "name": "client_referral_relations_client_id_fk_az",
+          "src": {
+            "table": ".client_referral_relations",
+            "column": "client_id"
+          },
+          "ref": {
+            "table": ".clients",
+            "column": "client_id"
+          }
+        },
+        {
+          "name": "referrals_created_by_fk_az",
+          "src": {
+            "table": ".referrals",
+            "column": "created_by"
+          },
+          "ref": {
+            "table": ".administrator",
+            "column": "id"
+          }
+        },
+        {
+          "name": "events_modified_by_fk_az",
+          "src": {
+            "table": ".events",
+            "column": "modified_by"
+          },
+          "ref": {
+            "table": ".administrator",
+            "column": "id"
+          }
+        },
+        {
+          "name": "events_created_by_fk_az",
+          "src": {
+            "table": ".events",
+            "column": "created_by"
+          },
+          "ref": {
+            "table": ".administrator",
+            "column": "id"
+          }
+        },
+        {
+          "name": "event_file_packages_modified_by_fk_az",
+          "src": {
+            "table": ".event_file_packages",
+            "column": "modified_by"
+          },
+          "ref": {
+            "table": ".administrator",
+            "column": "id"
+          }
+        },
+        {
+          "name": "event_file_packages_created_by_fk_az",
+          "src": {
+            "table": ".event_file_packages",
+            "column": "created_by"
+          },
+          "ref": {
+            "table": ".administrator",
+            "column": "id"
+          }
+        },
+        {
+          "name": "event_file_packages_event_id_fk_az",
+          "src": {
+            "table": ".event_file_packages",
+            "column": "event_id"
+          },
+          "ref": {
+            "table": ".events",
+            "column": "event_id"
+          }
+        },
+        {
+          "name": "event_pics_modified_by_fk_az",
+          "src": {
+            "table": ".event_pics",
+            "column": "modified_by"
+          },
+          "ref": {
+            "table": ".administrator",
+            "column": "id"
+          }
+        },
+        {
+          "name": "event_pics_created_by_fk_az",
+          "src": {
+            "table": ".event_pics",
+            "column": "created_by"
+          },
+          "ref": {
+            "table": ".administrator",
+            "column": "id"
+          }
+        },
+        {
+          "name": "event_pics_event_id_fk_az",
+          "src": {
+            "table": ".event_pics",
+            "column": "event_id"
+          },
+          "ref": {
+            "table": ".events",
+            "column": "event_id"
+          }
+        },
+        {
+          "name": "event_age_relations_age_interest_id_fk_az",
+          "src": {
+            "table": ".event_age_relations",
+            "column": "age_interest_id"
+          },
+          "ref": {
+            "table": ".event_age_interest",
+            "column": "age_interest_id"
+          }
+        },
+        {
+          "name": "event_age_relations_event_id_fk_az",
+          "src": {
+            "table": ".event_age_relations",
+            "column": "event_id"
+          },
+          "ref": {
+            "table": ".events",
+            "column": "event_id"
+          }
+        },
+        {
+          "name": "event_age_interest_modified_by_fk_az",
+          "src": {
+            "table": ".event_age_interest",
+            "column": "modified_by"
+          },
+          "ref": {
+            "table": ".administrator",
+            "column": "id"
+          }
+        },
+        {
+          "name": "event_age_interest_created_by_fk_az",
+          "src": {
+            "table": ".event_age_interest",
+            "column": "created_by"
+          },
+          "ref": {
+            "table": ".administrator",
+            "column": "id"
+          }
+        },
+        {
+          "name": "event_category_relations_category_interest_id_fk_az",
+          "src": {
+            "table": ".event_category_relations",
+            "column": "category_interest_id"
+          },
+          "ref": {
+            "table": ".event_category_interest",
+            "column": "category_interest_id"
+          }
+        },
+        {
+          "name": "event_category_relations_event_id_fk_az",
+          "src": {
+            "table": ".event_category_relations",
+            "column": "event_id"
+          },
+          "ref": {
+            "table": ".events",
+            "column": "event_id"
+          }
+        },
+        {
+          "name": "event_category_interest_modified_by_fk_az",
+          "src": {
+            "table": ".event_category_interest",
+            "column": "modified_by"
+          },
+          "ref": {
+            "table": ".administrator",
+            "column": "id"
+          }
+        },
+        {
+          "name": "event_category_interest_created_by_fk_az",
+          "src": {
+            "table": ".event_category_interest",
+            "column": "created_by"
+          },
+          "ref": {
+            "table": ".administrator",
+            "column": "id"
+          }
+        },
+        {
+          "name": "cart_client_id_fk_az",
+          "src": {
+            "table": ".cart",
+            "column": "client_id"
+          },
+          "ref": {
+            "table": ".clients",
+            "column": "client_id"
+          }
+        },
+        {
+          "name": "cart_details_event_id_fk_az",
+          "src": {
+            "table": ".cart_details",
+            "column": "event_id"
+          },
+          "ref": {
+            "table": ".events",
+            "column": "event_id"
+          }
+        },
+        {
+          "name": "cart_details_cart_id_fk_az",
+          "src": {
+            "table": ".cart_details",
+            "column": "cart_id"
+          },
+          "ref": {
+            "table": ".cart",
+            "column": "cart_id"
+          }
+        },
+        {
+          "name": "order_modified_by_fk_az",
+          "src": {
+            "table": ".order",
+            "column": "modified_by"
+          },
+          "ref": {
+            "table": ".administrator",
+            "column": "id"
+          }
+        },
+        {
+          "name": "order_client_id_fk_az",
+          "src": {
+            "table": ".order",
+            "column": "client_id"
+          },
+          "ref": {
+            "table": ".clients",
+            "column": "client_id"
+          }
+        },
+        {
+          "name": "order_details_event_id_fk_az",
+          "src": {
+            "table": ".order_details",
+            "column": "event_id"
+          },
+          "ref": {
+            "table": ".events",
+            "column": "event_id"
+          }
+        },
+        {
+          "name": "order_details_order_id_fk_az",
+          "src": {
+            "table": ".order_details",
+            "column": "order_id"
+          },
+          "ref": {
+            "table": ".order",
+            "column": "order_id"
+          }
+        },
+        {
+          "name": "log_event_activities_event_id_fk_az",
+          "src": {
+            "table": ".log_event_activities",
+            "column": "event_id"
+          },
+          "ref": {
+            "table": ".events",
+            "column": "event_id"
+          }
+        }
+      ],
+      "types": [
+        {
+          "schema": "",
+          "name": "admin_type",
+          "value": {
+            "enum": [
+              "superadmin",
+              "admin dhq"
+            ]
+          }
+        },
+        {
+          "schema": "",
+          "name": "enum",
+          "value": {
+            "enum": [
+              "active",
+              "deal",
+              "dispute"
+            ]
+          }
+        },
+        {
+          "schema": "",
+          "name": "event",
+          "value": {
+            "enum": [
+              "view",
+              "order",
+              "deal",
+              "dispute"
+            ]
+          }
+        },
+        {
+          "schema": "",
+          "name": "gender_interest",
+          "value": {
+            "enum": [
+              "M",
+              "F",
+              "M&F"
+            ]
+          }
+        },
+        {
+          "schema": "",
+          "name": "hash",
+          "value": {
+            "enum": [
+              "md5",
+              "sha1",
+              "sha256"
+            ]
+          }
+        },
+        {
+          "schema": "",
+          "name": "status",
+          "value": {
+            "enum": [
+              "approved",
+              "rejected",
+              "waiting"
+            ]
+          }
+        },
+        {
+          "schema": "",
+          "name": "type",
+          "value": {
+            "enum": [
+              "small",
+              "medium",
+              "large"
+            ]
+          }
+        },
+        {
+          "schema": "",
+          "name": "type_register",
+          "value": {
+            "enum": [
+              "referral",
+              "form"
+            ]
+          }
+        }
+      ],
+      "createdAt": 1705905288530,
+      "updatedAt": 1706084134859
+    }
+  ],
+  "ignoredRelations": {
+    ".administrator": [
+      "created_by",
+      "modified_by"
+    ]
+  },
+  "metadata": {
+    ".client": {
+      "columns": {}
+    },
+    ".notifications": {
+      "notes": "This table will be generated from laravel notify",
+      "columns": {}
+    }
+  },
+  "layouts": {
+    "initial layout": {
+      "tables": [
+        {
+          "id": ".notifications",
+          "position": {
+            "left": 380,
+            "top": 1010
+          },
+          "size": {
+            "width": 171.1015612788561,
+            "height": 44.99999715938789
+          },
+          "color": "purple",
+          "columns": []
+        },
+        {
+          "id": ".log_event_activities",
+          "position": {
+            "left": 1200,
+            "top": 950
+          },
+          "size": {
+            "width": 218.34375,
+            "height": 189
+          },
+          "color": "orange",
+          "columns": [
+            "id",
+            "event_id",
+            "activity_event",
+            "note",
+            "attribute",
+            "created_at"
+          ]
+        },
+        {
+          "id": ".administrator",
+          "position": {
+            "left": 40,
+            "top": 850
+          },
+          "size": {
+            "width": 183.65625,
+            "height": 261
+          },
+          "color": "amber",
+          "columns": [
+            "id",
+            "username",
+            "password",
+            "type",
+            "is_deleted",
+            "created_at",
+            "created_by",
+            "modified_at",
+            "modified_by"
+          ]
+        },
+        {
+          "id": ".order_details",
+          "position": {
+            "left": 860,
+            "top": 1070
+          },
+          "size": {
+            "width": 225.1171875,
+            "height": 165
+          },
+          "color": "emerald",
+          "columns": [
+            "order_detail_id",
+            "order_id",
+            "event_id",
+            "event_unit_price",
+            "created_at"
+          ]
+        },
+        {
+          "id": ".order",
+          "position": {
+            "left": 860,
+            "top": 770
+          },
+          "size": {
+            "width": 199.578125,
+            "height": 261
+          },
+          "color": "emerald",
+          "columns": [
+            "order_id",
+            "client_id",
+            "total_amount",
+            "order_date",
+            "status",
+            "adjustment_for",
+            "created_at",
+            "modified_at",
+            "modified_by"
+          ]
+        },
+        {
+          "id": ".cart_details",
+          "position": {
+            "left": 860,
+            "top": 490
+          },
+          "size": {
+            "width": 225.1171875,
+            "height": 165
+          },
+          "color": "rose",
+          "columns": [
+            "cart_detail_id",
+            "cart_id",
+            "event_id",
+            "event_unit_price",
+            "created_at"
+          ]
+        },
+        {
+          "id": ".cart",
+          "position": {
+            "left": 870,
+            "top": 320
+          },
+          "size": {
+            "width": 199.578125,
+            "height": 141
+          },
+          "color": "rose",
+          "columns": [
+            "cart_id",
+            "client_id",
+            "total_amount",
+            "created_at"
+          ]
+        },
+        {
+          "id": ".event_category_relations",
+          "position": {
+            "left": 1810,
+            "top": 520
+          },
+          "size": {
+            "width": 264.0859375,
+            "height": 141
+          },
+          "color": "violet",
+          "columns": [
+            "id",
+            "event_id",
+            "category_interest_id",
+            "created_at"
+          ]
+        },
+        {
+          "id": ".event_age_relations",
+          "position": {
+            "left": 1560,
+            "top": 310
+          },
+          "size": {
+            "width": 220.6875,
+            "height": 141
+          },
+          "color": "violet",
+          "columns": [
+            "id",
+            "event_id",
+            "age_interest_id",
+            "created_at"
+          ]
+        },
+        {
+          "id": ".referrals",
+          "position": {
+            "left": 50,
+            "top": 540
+          },
+          "size": {
+            "width": 223.8125,
+            "height": 213
+          },
+          "color": "violet",
+          "columns": [
+            "referral_id",
+            "referral_nik",
+            "referral_name",
+            "referral_dapartment",
+            "referral_division",
+            "created_at",
+            "created_by"
+          ]
+        },
+        {
+          "id": ".event_file_packages",
+          "position": {
+            "left": 1560,
+            "top": 670
+          },
+          "size": {
+            "width": 224.34375,
+            "height": 261
+          },
+          "color": "violet",
+          "columns": [
+            "package_id",
+            "package_name",
+            "package_file",
+            "event_id",
+            "is_deleted",
+            "created_at",
+            "created_by",
+            "modified_at",
+            "modified_by"
+          ]
+        },
+        {
+          "id": ".event_category_interest",
+          "position": {
+            "left": 1820,
+            "top": 720
+          },
+          "size": {
+            "width": 255.234375,
+            "height": 213
+          },
+          "color": "violet",
+          "columns": [
+            "category_interest_id",
+            "category_interest",
+            "is_deleted",
+            "created_at",
+            "created_by",
+            "modified_at",
+            "modified_by"
+          ]
+        },
+        {
+          "id": ".event_age_interest",
+          "position": {
+            "left": 1830,
+            "top": 210
+          },
+          "size": {
+            "width": 220.828125,
+            "height": 213
+          },
+          "color": "violet",
+          "columns": [
+            "age_interest_id",
+            "age_interest_target",
+            "is_deleted",
+            "created_at",
+            "created_by",
+            "modified_at",
+            "modified_by"
+          ]
+        },
+        {
+          "id": ".event_pics",
+          "position": {
+            "left": 1560,
+            "top": 970
+          },
+          "size": {
+            "width": 197.671875,
+            "height": 285
+          },
+          "color": "violet",
+          "columns": [
+            "pics_id",
+            "pics_name",
+            "pics_description",
+            "pics_url",
+            "event_id",
+            "is_deleted",
+            "created_at",
+            "created_by",
+            "modified_at",
+            "modified_by"
+          ]
+        },
+        {
+          "id": ".events",
+          "position": {
+            "left": 1160,
+            "top": 380
+          },
+          "size": {
+            "width": 278.5,
+            "height": 429
+          },
+          "color": "yellow",
+          "columns": [
+            "event_id",
+            "event_name",
+            "event_description",
+            "event_start_at",
+            "event_end_at",
+            "event_location",
+            "event_type",
+            "event_gender",
+            "event_package_description",
+            "event_price",
+            "event_max_deal",
+            "is_deleted",
+            "created_at",
+            "created_by",
+            "modified_at",
+            "modified_by"
+          ]
+        },
+        {
+          "id": ".client_referral_relations",
+          "position": {
+            "left": 70,
+            "top": 390
+          },
+          "size": {
+            "width": 250.046875,
+            "height": 141
+          },
+          "color": "green",
+          "columns": [
+            "id",
+            "client_id",
+            "referral_id",
+            "created_at"
+          ]
+        },
+        {
+          "id": ".clients",
+          "position": {
+            "left": 370,
+            "top": 360
+          },
+          "size": {
+            "width": 298.484375,
+            "height": 405
+          },
+          "color": "teal",
+          "columns": [
+            "client_id",
+            "client_name",
+            "client_email",
+            "client_phone",
+            "client_company",
+            "client_password",
+            "client_type_register",
+            "client_activation_code",
+            "client_forgot_password_code",
+            "client_approval_status",
+            "client_last_login",
+            "active_at",
+            "created_at",
+            "modified_at",
+            "is_deleted"
+          ]
+        }
+      ],
+      "createdAt": 1705905288530,
+      "updatedAt": 1706088656325
+    }
+  },
+  "createdAt": 1705909117088,
+  "updatedAt": 1706088660369,
+  "version": 2
+}
